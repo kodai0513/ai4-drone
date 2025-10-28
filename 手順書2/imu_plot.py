@@ -1,14 +1,13 @@
-# pip install pyserial matplotlib
-
+# --- 1. 定数とライブラリのインポート ---
 import serial
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import time
 
 
-SERIAL_PORT = 'COM4'  # COMポート名
+SERIAL_PORT = ''  # ⚠️ 使用するCOMポート名を設定してください (例: 'COM4' や '/dev/ttyUSB0')
 BAUD_RATE = 115200     # M5StickCPlus2のスケッチと同じボーレート
-MAX_POINTS = 100       # グラフに表示するデータ点の最大数 (窓のサイズ)
+MAX_POINTS = 100       # グラフに表示するデータ点の最大数 
 
 # --- 2. 初期化 ---
 try:
@@ -33,8 +32,8 @@ line_gx, = ax.plot(data_x, data_gx, label='Gyro X (Roll)')
 line_gy, = ax.plot(data_x, data_gy, label='Gyro Y (Pitch)')
 line_gz, = ax.plot(data_x, data_gz, label='Gyro Z (Yaw)')
 ax.legend(loc='upper right')
-ax.set_title("M5StickC Plus2 Gyro Data Real-time Plot") # タイトルをより明確に
-ax.set_xlabel("Time Step (Data Points)")               # ここを修正
+ax.set_title("M5StickC Plus2 Gyro Data Real-time Plot") 
+ax.set_xlabel("Time Step (Data Points)")               
 ax.set_ylabel("Angular Velocity (deg/s)")
 ax.grid(True)
 # Y軸の範囲を固定 (±300 deg/s程度を想定)
@@ -53,12 +52,10 @@ def update(frame):
 
     if line:
         try:
-            # カンマで分割し、ジャイロの3値 (4番目から6番目) を抽出
             all_values = [float(v) for v in line.split(',') if v.strip()]
             
             # 6軸データ全てが揃っているか確認
             if len(all_values) == 6:
-                # 0:ax, 1:ay, 2:az, 3:gx, 4:gy, 5:gz
                 gx = all_values[3] 
                 gy = all_values[4]
                 gz = all_values[5]
